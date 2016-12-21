@@ -23,6 +23,33 @@ document.getElementById('score-1').textContent = '0';
 document.getElementById('current-1').textContent = '0';
 
 
+/*====================================================
+  MAIN FUNCTIONS
+====================================================*/
+
+//---switchPlayer() function
+function switchPlayer() {
+
+  //if activePlayer is 0 then active player 1 else activePlayer 0
+  activePlayer === 0 ? activePlayer = 1 : activePlayer = 0;
+  //set roundScore back to 0
+  roundScore = 0;
+  //display both roundscores back to 0
+  document.getElementById('current-0').textContent = '0';
+  document.getElementById('current-1').textContent = '0';
+  //add active class if doesn't have it and remove it if it has it
+  document.querySelector('.player-0-panel').classList.toggle('active');
+  document.querySelector('.player-1-panel').classList.toggle('active');
+  //hide dice
+  diceDOM.style.display = 'none';
+
+};
+
+
+/*====================================================
+  ROLL DICE BUTTON EVENT LISTENER
+====================================================*/
+
 document.querySelector('.btn-roll').addEventListener('click', function() {
   var dice, diceDOM;
 
@@ -41,19 +68,38 @@ document.querySelector('.btn-roll').addEventListener('click', function() {
     document.getElementById('current-' + activePlayer).textContent = roundScore;
   } else {
     // if dice number is 1 then switch player
-    //if activePlayer is 0 then active player 1 else activePlayer 0
-    activePlayer === 0 ? activePlayer = 1 : activePlayer = 0;
-    //set roundScore back to 0
-    roundScore = 0;
-    //display both roundscores back to 0
-    document.getElementById('current-0').textContent = '0';
-    document.getElementById('current-1').textContent = '0';
-    //add active class if doesn't have it and remove it if it has it
-    document.querySelector('.player-0-panel').classList.toggle('active');
-    document.querySelector('.player-1-panel').classList.toggle('active');
-    //hide dice
-    diceDOM.style.display = 'none';
+    switchPlayer();
+  }
 
+});
+
+
+/*====================================================
+  HOLD GAME BUTTON EVENT LISTENER
+====================================================*/
+
+document.querySelector('.btn-hold').addEventListener('click', function() {
+
+  // 1. add the ACTIVE player CURRENT score to the GLOBAL score
+  scores[activePlayer] += roundScore;
+
+  // 2. update UI
+  //display the GLOBAL score of the ACTIVE player in the UI
+  document.getElementById('score-' + activePlayer).textContent = scores[activePlayer];
+
+  // 3. check if ACTIVE player reach the goal score and won the game
+  if (scores[activePlayer] >= 20) {
+    //display the ACTIVE player name as Winner!
+    document.querySelector('#name-' + activePlayer).textContent = 'Winner!';
+    //hide the dice
+    document.querySelector('.dice').style.display = 'none';
+    //remove the ACTIVE class from the ACTIVE player
+    document.querySelector('.player-'+ activePlayer +'-panel').classList.remove('active');
+    //remove the WINNER class to the ACTIVE player
+    document.querySelector('.player-'+ activePlayer +'-panel').classList.add('winner');
+  } else {
+    //if doesn't reach the goal score after HOLDING the game, switch player
+    switchPlayer();
   }
 
 });
