@@ -10,7 +10,7 @@ GAME RULES:
 */
 
 //declare all global variables
-var scores, roundScore, activePlayer;
+var scores, roundScore, activePlayer, gameOn;
 
 // run init() function when the game starts
 init();
@@ -21,6 +21,9 @@ init();
 ====================================================*/
 
 function init() {
+  //set initial gameOn equal true
+  gameOn = true;
+
   //set all the scores to 0
   scores = [0,0];
   roundScore = 0;
@@ -58,7 +61,7 @@ function switchPlayer() {
   roundScore = 0;
 
   //hide dice
-  diceDOM.style.display = 'none';
+  document.querySelector('.dice').style.display = 'none';
 
   //display both roundscores back to 0
   document.getElementById('current-0').textContent = '0';
@@ -83,24 +86,30 @@ document.querySelector('.btn-new').addEventListener('click', init);
 ====================================================*/
 
 document.querySelector('.btn-roll').addEventListener('click', function() {
-  var dice, diceDOM;
 
-  // 1. get a random Number
-  dice = Math.floor((Math.random() * 6) + 1);
+  // if gameOn is true then player can roll dice
+  if (gameOn) {
 
-  // 2. display result
-  diceDOM = document.querySelector('.dice');
-  diceDOM.style.display = 'block';
-  diceDOM.src = 'img/dice-' + dice + '.png';
+    var dice, diceDOM;
 
-  // 3. update the round score but only if the rolled number is not 1
-  if (dice !== 1) {
-    // if dice is not 1 add score to round score
-    roundScore += dice;
-    document.getElementById('current-' + activePlayer).textContent = roundScore;
-  } else {
-    // if dice number is 1 then switch player
-    switchPlayer();
+    // 1. get a random Number
+    dice = Math.floor((Math.random() * 6) + 1);
+
+    // 2. display result
+    diceDOM = document.querySelector('.dice');
+    diceDOM.style.display = 'block';
+    diceDOM.src = 'img/dice-' + dice + '.png';
+
+    // 3. update the round score but only if the rolled number is not 1
+    if (dice !== 1) {
+      // if dice is not 1 add score to round score
+      roundScore += dice;
+      document.getElementById('current-' + activePlayer).textContent = roundScore;
+    } else {
+      // if dice number is 1 then switch player
+      switchPlayer();
+    }
+
   }
 
 });
@@ -112,26 +121,35 @@ document.querySelector('.btn-roll').addEventListener('click', function() {
 
 document.querySelector('.btn-hold').addEventListener('click', function() {
 
-  // 1. add the ACTIVE player CURRENT score to the GLOBAL score
-  scores[activePlayer] += roundScore;
+  // if gameOn is true then player can HOLD the game
+  if (gameOn) {
 
-  // 2. update UI
-  //display the GLOBAL score of the ACTIVE player in the UI
-  document.getElementById('score-' + activePlayer).textContent = scores[activePlayer];
+    // 1. add the ACTIVE player CURRENT score to the GLOBAL score
+    scores[activePlayer] += roundScore;
 
-  // 3. check if ACTIVE player reach the goal score and won the game
-  if (scores[activePlayer] >= 100) {
-    //display the ACTIVE player name as Winner!
-    document.querySelector('#name-' + activePlayer).textContent = 'Winner!';
-    //hide the dice
-    document.querySelector('.dice').style.display = 'none';
-    //remove the ACTIVE class from the ACTIVE player
-    document.querySelector('.player-'+ activePlayer +'-panel').classList.remove('active');
-    //remove the WINNER class to the ACTIVE player
-    document.querySelector('.player-'+ activePlayer +'-panel').classList.add('winner');
-  } else {
-    //if doesn't reach the goal score after HOLDING the game, switch player
-    switchPlayer();
+    // 2. update UI
+    //display the GLOBAL score of the ACTIVE player in the UI
+    document.getElementById('score-' + activePlayer).textContent = scores[activePlayer];
+
+    // 3. check if ACTIVE player reach the goal score and won the game
+    if (scores[activePlayer] >= 100) {
+      //display the ACTIVE player name as Winner!
+      document.querySelector('#name-' + activePlayer).textContent = 'Winner!';
+      //hide the dice
+      document.querySelector('.dice').style.display = 'none';
+      //remove the ACTIVE class from the ACTIVE player
+      document.querySelector('.player-'+ activePlayer +'-panel').classList.remove('active');
+      //remove the WINNER class to the ACTIVE player
+      document.querySelector('.player-'+ activePlayer +'-panel').classList.add('winner');
+
+      //if ACTIVE player won the game set gameOn to false to stop game
+      gameOn = !gameOn;
+
+    } else {
+      //if doesn't reach the goal score after HOLDING the game, switch player
+      switchPlayer();
+    }
+
   }
 
 });
