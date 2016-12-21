@@ -75,6 +75,7 @@ body {
   position: absolute;
   top: -7px;
   content: "\2022";
+  color: #EB4D4D;
   font-size: 47px;
   right: 10px;
 }
@@ -110,7 +111,9 @@ button {
   font-family: 'lato', sans-serif;
   font-size: 20px;
   text-transform: uppercase;
+  font-weight: inherit;
   outline: none;
+  transition: color 0.3s;
 }
 
 i {
@@ -124,6 +127,7 @@ i {
   transition: margin 0.3s;
 }
 
+button:hover { color: #EB4D4D; }
 button:hover i { margin-right: 20px; }
 
 .btn-new { top: 45px; }
