@@ -84,12 +84,14 @@ document.querySelector('.btn-new').addEventListener('click', init);
 /*====================================================
   ROLL DICE BUTTON EVENT LISTENER
 ====================================================*/
+//lastDice variable will store the last roll dice number
+var lastDice;
 
 document.querySelector('.btn-roll').addEventListener('click', function() {
 
   // if gameOn is true then player can roll dice
   if (gameOn) {
-
+    //declare private variables
     var dice, diceDOM;
 
     // 1. get a random Number
@@ -100,15 +102,29 @@ document.querySelector('.btn-roll').addEventListener('click', function() {
     diceDOM.style.display = 'block';
     diceDOM.src = 'img/dice-' + dice + '.png';
 
-    // 3. update the round score but only if the rolled number is not 1
-    if (dice !== 1) {
+    // 3. if dice and lastDice are both 6. Player looses GLOBAL score
+    if (dice === 6 && lastDice === 6) {
+      //set the GLOBAL score of the ACTIVE player back to 0
+      scores[activePlayer] = 0;
+      //display the GLOBAL score to 0 of the ACTIVE player in the UI
+      document.getElementById('score-' + activePlayer).textContent = 0;
+      //both numbers are 6 switch player
+      switchPlayer();
+
+    // 4. if the number is not 1 update the round score
+    } else if (dice !== 1) {
       // if dice is not 1 add score to round score
       roundScore += dice;
+      //roundScore is display in the ACTIVE player
       document.getElementById('current-' + activePlayer).textContent = roundScore;
+
+    //5. if number is 1 switch player
     } else {
-      // if dice number is 1 then switch player
       switchPlayer();
     }
+
+    // 6. store the dice value inside the lastDice variable so can be compare later
+    lastDice = dice;
 
   }
 
