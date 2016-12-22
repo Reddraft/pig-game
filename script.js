@@ -147,8 +147,19 @@ document.querySelector('.btn-hold').addEventListener('click', function() {
     //display the GLOBAL score of the ACTIVE player in the UI
     document.getElementById('score-' + activePlayer).textContent = scores[activePlayer];
 
-    // 3. check if ACTIVE player reach the goal score and won the game
-    if (scores[activePlayer] >= 100) {
+    var winningScore;
+    //get the value from the input
+    var input = document.querySelector('.final-score').value;
+    // there is a value in the input set the winning score to that value
+    if (input) {
+      winningScore = input;
+    } else {
+      //if the input is empty set the winningScore to 100 default
+      winningScore =  100;
+    }
+
+    // 3. check if ACTIVE player reach the winningScore
+    if (scores[activePlayer] >= winningScore) {
       //display the ACTIVE player name as Winner!
       document.querySelector('#name-' + activePlayer).textContent = 'Winner!';
       //hide the dice
@@ -158,11 +169,11 @@ document.querySelector('.btn-hold').addEventListener('click', function() {
       //remove the WINNER class to the ACTIVE player
       document.querySelector('.player-'+ activePlayer +'-panel').classList.add('winner');
 
-      //if ACTIVE player won the game set gameOn to false to stop game
+      //if ACTIVE player won the game set gameOn equal to false and stop game
       gameOn = !gameOn;
 
     } else {
-      //if doesn't reach the goal score after HOLDING the game, switch player
+      //if doesn't reach the winningScore after HOLDING, switch player
       switchPlayer();
     }
 
